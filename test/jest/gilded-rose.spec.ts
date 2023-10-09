@@ -90,4 +90,32 @@ describe('Gilded Rose', () => {
       expect(items[1].quality).toBe(50);
     });
   });
+
+  describe('Other Items', () => {
+    it('Quality cannot be negative', () => {
+      const gildedRose = new GildedRose([new Item("Test Item", 1, 0)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toBe(0);
+    });
+
+    it ('Quality cannot be more than 50', () => {
+      const gildedRose = new GildedRose([new Item("Test Item", 1, 50)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toBe(50);
+    });
+
+    it('Should reduce quality by one before the sell date', () => {
+      const gildedRose = new GildedRose([new Item("Test Item", 3, 2)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].sellIn).toBe(2);
+      expect(items[0].quality).toBe(1);
+    });
+
+    it('Should reduce quality by two after the sell date', () => {
+      const gildedRose = new GildedRose([new Item("Test Item", -1, 2)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].sellIn).toBe(-2);
+      expect(items[0].quality).toBe(0);
+    });
+  });
 });
