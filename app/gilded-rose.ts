@@ -10,7 +10,7 @@ export class Item {
   }
 }
 
-enum SpecialItems {
+export enum SpecialItems {
   agedBrie = 'Aged Brie',
   concert = 'Backstage passes to a TAFKAL80ETC concert',
   sulfuras = 'Sulfuras, Hand of Ragnaros',
@@ -24,7 +24,7 @@ export class GildedRose {
     this.items = items;
   }
 
-  calculateConcert(sellIn: number, quality: number) {
+  calculateConcert(sellIn: number, quality: number): { quality: number, sellIn: number } {
     const newSellIn = sellIn - 1;
 
     if (sellIn <= 0) {
@@ -42,7 +42,7 @@ export class GildedRose {
     return { quality: quality >= 49 ? 50 : quality + 1, sellIn: newSellIn };
   }
 
-  calculateQualityAndSellIn(item: Item) {
+  calculateQualityAndSellIn(item: Item): { quality: number, sellIn: number } {
     if (item.name === SpecialItems.sulfuras) {
       return item.quality >= 0 ? item : { ...item, quality: 0};
     }
