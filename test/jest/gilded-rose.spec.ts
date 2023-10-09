@@ -118,4 +118,25 @@ describe('Gilded Rose', () => {
       expect(items[0].quality).toBe(0);
     });
   });
+
+  describe('Conjured Mana Cake', () => {
+    it('Quality cannot be negative', () => {
+      const gildedRose = new GildedRose([new Item("Conjured Mana Cake", 1, 0)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toBe(0);
+    });
+
+    it ('Quality cannot be more than 50', () => {
+      const gildedRose = new GildedRose([new Item("Conjured Mana Cake", 1, 50)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toBe(50);
+    });
+
+    it('Should reduce the quality by two', () => {
+      const gildedRose = new GildedRose([new Item("Conjured Mana Cake", 10, 30)]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].sellIn).toBe(9);
+      expect(items[0].quality).toBe(28);
+    });
+  });
 });
