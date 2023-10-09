@@ -43,43 +43,53 @@ export class GildedRose {
     return { quality: quality + 1, sellIn: newSellIn };
   }
 
+  calculateQualityAndSellIn(item: Item) {
+    if (item.name === SpecialItems.sulfuras) {
+      return item.quality >= 0 ? item : { ...item, quality: 0};
+    }
+
+    if (item.quality <= 0) {
+      return { quality: 0, sellIn: item.sellIn - 1 };
+    }
+
+    if (item.quality >= 49) {
+      return { quality: 50, sellIn: item.sellIn - 1 };
+    }
+
+    switch (item.name) {
+      case SpecialItems.agedBrie: {
+        if (item.sellIn <= 0) {
+          return { quality: item.quality + 2, sellIn: item.sellIn - 1 }
+        }
+        return { quality: item.quality + 1, sellIn: item.sellIn - 1 }
+      }
+
+      case SpecialItems.concert: {
+        return this.calculateConcert(item.sellIn, item.quality);
+      }
+
+      case SpecialItems.conjured: {
+        return { quality: item.quality - 2, sellIn: item.sellIn - 1 };
+      }
+
+      default: {
+        if (item.sellIn <= 0) {
+          return { quality: item.quality - 2, sellIn: item.sellIn - 1 };
+        }
+
+        return { quality: item.quality - 1, sellIn: item.sellIn - 1 };
+      }
+    }
+  }
+
   updateQuality() {
-    const updatedItems = this.items.map((item) => {
-      if (item.name === SpecialItems.sulfuras) {
-        return item.quality >= 0 ? item : { ...item, quality: 0};
-      }
+    this.items.forEach((item) => {
+      const { quality, sellIn } = this.calculateQualityAndSellIn(item);
 
-      if (item.quality <= 0) {
-        return { name: item.name, quality: 0, sellIn: item.sellIn - 1 };
-      }
+      item.quality = quality;
+      item.sellIn = sellIn;
+    })
 
-      if (item.quality >= 50) {
-        return { name: item.name, quality: 50, sellIn: item.sellIn - 1 };
-      }
-
-      switch (item.name) {
-        case SpecialItems.agedBrie: {
-          return { name: item.name, quality: item.quality + 1, sellIn: item.sellIn - 1 }
-        }
-
-        case SpecialItems.concert: {
-          return this.calculateConcert(item.sellIn, item.quality);
-        }
-
-        case SpecialItems.conjured: {
-          return { name: item.name, quality: item.quality - 2, sellIn: item.sellIn - 1 };
-        }
-
-        default: {
-          if (item.sellIn < 0) {
-            return { name: item.name, quality: item.quality - 2, sellIn: item.sellIn - 1 };
-          }
-
-          return { name: item.name, quality: item.quality - 1, sellIn: item.sellIn - 1 };
-        }
-      }
-    });
-
-    return updatedItems;
+    return this.items;
   }
 }
