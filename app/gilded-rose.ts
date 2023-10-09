@@ -17,7 +17,6 @@ enum SpecialItems {
   conjured = 'Conjured Mana Cake'
 }
 
-
 export class GildedRose {
   items: Array<Item>;
 
@@ -33,14 +32,14 @@ export class GildedRose {
     }
 
     if (sellIn < 6) {
-      return { quality: quality + 3, sellIn: newSellIn };
+      return { quality: quality >= 49 ? 50 : quality + 3, sellIn: newSellIn };
     }
 
     if (sellIn < 11) {
-      return { quality: quality + 2, sellIn: newSellIn };
+      return { quality: quality >= 49 ? 50 : quality + 2, sellIn: newSellIn };
     }
 
-    return { quality: quality + 1, sellIn: newSellIn };
+    return { quality: quality >= 49 ? 50 : quality + 1, sellIn: newSellIn };
   }
 
   calculateQualityAndSellIn(item: Item) {
@@ -48,20 +47,20 @@ export class GildedRose {
       return item.quality >= 0 ? item : { ...item, quality: 0};
     }
 
-    if (item.quality <= 0) {
+    if (item.quality <= 0 && item.name !== SpecialItems.agedBrie) {
       return { quality: 0, sellIn: item.sellIn - 1 };
     }
 
-    if (item.quality >= 49) {
+    if (item.quality >= 49 && item.name !== SpecialItems.concert) {
       return { quality: 50, sellIn: item.sellIn - 1 };
     }
 
     switch (item.name) {
       case SpecialItems.agedBrie: {
         if (item.sellIn <= 0) {
-          return { quality: item.quality + 2, sellIn: item.sellIn - 1 }
+          return { quality: item.quality < 0 ? 0 : item.quality + 2, sellIn: item.sellIn - 1 }
         }
-        return { quality: item.quality + 1, sellIn: item.sellIn - 1 }
+        return { quality: item.quality < 0 ? 0 : item.quality + 1, sellIn: item.sellIn - 1 }
       }
 
       case SpecialItems.concert: {
