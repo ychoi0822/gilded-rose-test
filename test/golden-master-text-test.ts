@@ -1,4 +1,4 @@
-import { Item, GildedRose } from '../../../gilded-rose-test/app/gilded-rose';
+import { Item, GildedRose } from '../../gilded-rose-test/app/gilded-rose';
 
 const items = [
   new Item("+5 Dexterity Vest", 10, 20), //
