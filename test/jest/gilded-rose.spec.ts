@@ -3,7 +3,7 @@ import { Item, GildedRose } from '../../app/gilded-rose';
 import { SpecialItems } from '../../app/gilded-rose';
 
 describe('Gilded Rose', () => {
-  describe('Aged Brie', () => {
+  describe(`${SpecialItems.agedBrie}`, () => {
     it ('Quality cannot be negative', () => {
       const gildedRose = new GildedRose([new Item(SpecialItems.agedBrie, 1, -2)]);
       const items = gildedRose.updateQuality();
@@ -26,7 +26,7 @@ describe('Gilded Rose', () => {
   });
 
 
-  describe('Backstage passes to a TAFKAL80ETC concert', () => {
+  describe(`${SpecialItems.concert}`, () => {
     it ('Quality cannot be negative', () => {
       const gildedRose = new GildedRose([new Item(SpecialItems.concert, 1, -2)]);
       const items = gildedRose.updateQuality();
@@ -68,7 +68,7 @@ describe('Gilded Rose', () => {
     });
   });
 
-  describe('Sulfuras, Hand of Ragnaros', () => {
+  describe(`${SpecialItems.sulfuras}`, () => {
     it ('Quality cannot be negative', () => {
       const gildedRose = new GildedRose([new Item(SpecialItems.sulfuras, 1, -2)]);
       const items = gildedRose.updateQuality();

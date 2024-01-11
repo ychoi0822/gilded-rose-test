@@ -3,7 +3,7 @@ export class Item {
   sellIn: number;
   quality: number;
 
-  constructor(name, sellIn, quality) {
+  constructor(name: string, sellIn: number, quality: number) {
     this.name = name;
     this.sellIn = sellIn;
     this.quality = quality;
@@ -24,69 +24,62 @@ export class GildedRose {
     this.items = items;
   }
 
-  calculateConcert(sellIn: number, quality: number): { quality: number, sellIn: number } {
-    const newSellIn = sellIn - 1;
-
+  calculateConcertQualityValue(sellIn: number, quality: number) {
     if (sellIn <= 0) {
-      return { quality: 0, sellIn: newSellIn };
+      return 0;
     }
 
-    if (sellIn < 6) {
-      return { quality: quality >= 49 ? 50 : quality + 3, sellIn: newSellIn };
+    if (sellIn <= 5) {
+      const newQuality = quality + 3;
+      return newQuality < 50 ? newQuality : 50;
     }
 
-    if (sellIn < 11) {
-      return { quality: quality >= 49 ? 50 : quality + 2, sellIn: newSellIn };
+    if (sellIn <= 10) {
+      const newQuality = quality + 2;
+      return newQuality < 50 ? newQuality : 50;
     }
 
-    return { quality: quality >= 49 ? 50 : quality + 1, sellIn: newSellIn };
+    return quality + 1;
   }
 
-  calculateQualityAndSellIn(item: Item): { quality: number, sellIn: number } {
-    if (item.name === SpecialItems.sulfuras) {
-      return item.quality >= 0 ? item : { ...item, quality: 0};
+  calculateQualityValue(item: Item) {
+    const { quality, name, sellIn} = item;
+    if (quality <= 0 && name !== SpecialItems.agedBrie) return 0;
+
+    if (name === SpecialItems.sulfuras) {
+      return quality >= 80 ? 80 : quality;
     }
 
-    if (item.quality <= 0 && item.name !== SpecialItems.agedBrie) {
-      return { quality: 0, sellIn: item.sellIn - 1 };
-    }
+    if (quality >= 50 && name !==SpecialItems.concert) return 50;
 
-    if (item.quality >= 49 && item.name !== SpecialItems.concert) {
-      return { quality: 50, sellIn: item.sellIn - 1 };
-    }
-
-    switch (item.name) {
+    switch (name) {
       case SpecialItems.agedBrie: {
-        if (item.sellIn <= 0) {
-          return { quality: item.quality < 0 ? 0 : item.quality + 2, sellIn: item.sellIn - 1 }
-        }
-        return { quality: item.quality < 0 ? 0 : item.quality + 1, sellIn: item.sellIn - 1 }
+        return quality < 0 ? 0 : quality + 1;
       }
-
       case SpecialItems.concert: {
-        return this.calculateConcert(item.sellIn, item.quality);
+        return this.calculateConcertQualityValue(sellIn, quality);
       }
-
       case SpecialItems.conjured: {
-        return { quality: item.quality - 2, sellIn: item.sellIn - 1 };
+        return quality - 2;
       }
-
       default: {
-        if (item.sellIn <= 0) {
-          return { quality: item.quality - 2, sellIn: item.sellIn - 1 };
-        }
-
-        return { quality: item.quality - 1, sellIn: item.sellIn - 1 };
+        return sellIn > 0 ? quality - 1 :quality -2;
       }
     }
   }
 
-  updateQuality() {
-    this.items.forEach((item) => {
-      const { quality, sellIn } = this.calculateQualityAndSellIn(item);
+  calculateSellInValue(item: Item) {
+    const { name, sellIn } = item;
+    return name === SpecialItems.sulfuras ? sellIn : sellIn - 1;
+  }
 
-      item.quality = quality;
-      item.sellIn = sellIn;
+  updateQuality(): Item[] {
+    this.items.forEach((item) => {
+      const newQuality = this.calculateQualityValue(item);
+      const newSellIn = this.calculateSellInValue(item);
+
+      item.quality = newQuality;
+      item.sellIn = newSellIn;
     })
 
     return this.items;
