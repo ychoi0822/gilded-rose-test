@@ -23,7 +23,7 @@ if (process.argv.length > 2) {
 for (let i = 0; i < days; i++) {
   console.log("-------- day " + i + " --------");
   console.log("name, sellIn, quality");
-  items.forEach(element => {
+  gildedRose.items.forEach(element => {
     console.log(element.name + ' ' + element.sellIn + ' ' + element.quality);
 
   });

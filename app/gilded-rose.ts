@@ -74,13 +74,11 @@ export class GildedRose {
   }
 
   updateQuality(): Item[] {
-    this.items.forEach((item) => {
-      const newQuality = this.calculateQualityValue(item);
-      const newSellIn = this.calculateSellInValue(item);
-
-      item.quality = newQuality;
-      item.sellIn = newSellIn;
-    })
+    this.items = this.items.map((item) => ({
+      ...item,
+      quality: this.calculateQualityValue(item),
+      sellIn: this.calculateSellInValue(item),
+    }))
 
     return this.items;
   }
